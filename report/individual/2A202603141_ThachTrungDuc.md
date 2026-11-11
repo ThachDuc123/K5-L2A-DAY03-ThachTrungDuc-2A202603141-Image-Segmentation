@@ -11,15 +11,15 @@
 | easy_semantic | easy_semantic.zip | 3 / 3 | 20 |
 | medium_instance | medium_instance.zip | 3 / 3 | 32 |
 | hard_panoptic | hard_panoptic.zip | 2 / 2 | 30 |
-| cp1_holes | chưa có | 0 / 1 | 3 |
-| cp2_slice | chưa có | 0 / 1 | 3 |
+| cp1_holes | cp1_holes.zip | 1 / 1 | 3 |
+| cp2_slice | cp2_slice.zip | 1 / 1 | 3 |
 | cp5_occlusion | cp5_occlusion.zip | 1 / 1 | 3 |
 | cp3_thin | cp3_thin.zip | 1 / 1 | 3 |
 | cp4_curb | cp4_curb.zip | 1 / 1 | 3 |
 | cp6_coverage | cp6_coverage.zip | 1 / 1 | 3 |
 | **Tổng tối đa** | | | **100** |
 
-Ba tier và bốn checkpoint (cp3–cp6) đã export đúng format quy định (semantic: Segmentation mask 1.1; instance/panoptic: COCO 1.0) và đặt trong `submissions/` với đúng tên. **cp1_holes và cp2_slice chưa kịp làm**, không tạo ZIP rỗng; phần còn thiếu này được ghi rõ thay vì bỏ trống.
+Ba tier và bốn checkpoint (cp3–cp6) đã export đúng format quy định (semantic: Segmentation mask 1.1; instance/panoptic: COCO 1.0) và đặt trong `submissions/` với đúng tên. Cả chín trạm đã có ZIP; cp1_holes còn **lỗi mask trùng** được liệt kê ở mục 3, cần sửa trong CVAT và export lại nếu còn kịp.
 
 ## 2. Một quyết định trước khi dùng gợi ý
 
@@ -37,6 +37,8 @@ Ba tier và bốn checkpoint (cp3–cp6) đã export đúng format quy định (
 - Sau sửa đã Save và export lại chưa? **Chưa** — lỗi được phát hiện ở bước tự kiểm sau khi export; cần quay lại CVAT sửa mask, Save và export `hard_panoptic.zip` lần nữa, rồi thay file trong `submissions/`. Cần coach hỗ trợ xác nhận cách xử lý phần truck tràn sang `road`/`vegetation` khi vẽ lại. Bản `hard_panoptic.zip` hiện trong `submissions/` vẫn là bản trước khi sửa, chỉ việc thay khi có export mới.
 
 Về tự đánh giá: chưa chạy scorer / chưa có điểm tự đánh giá (ground truth chưa dùng để chấm; không đưa đáp án vào fork).
+
+**Lỗi thứ hai phát hiện bằng tự kiểm decode RLE (cùng trạng thái "chưa sửa"):** `cp1_holes` · `000000144300.jpg` — mask bị vẽ trùng: id 3 (`truck`) và id 6 (`bus`) là cùng một mask trên caravan (45.527 px, cùng bbox); id 5 (`bus`) và id 9 (`truck`) là cùng một mask trên xe van (11.093 px); vùng van bị ba mask đè nhau (id 4/5/8); hai mask `person` id 2/10 chồng gần trọn. Hành động cần làm: trong CVAT xoá các mask dư để mỗi xe/person còn đúng một mask, chọn một class cho từng xe rồi Save và export lại. Bản `cp1_holes.zip` hiện tại vẫn là bản chưa sửa.
 
 ## 4. Ba ca chưa chắc hoặc đã cân nhắc
 
