@@ -19,7 +19,7 @@
 | cp6_coverage | cp6_coverage.zip | 1 / 1 | 3 |
 | **Tổng tối đa** | | | **100** |
 
-Ba tier và bốn checkpoint (cp3–cp6) đã export đúng format quy định (semantic: Segmentation mask 1.1; instance/panoptic: COCO 1.0) và đặt trong `submissions/` với đúng tên. Cả chín trạm đã có ZIP; cp1_holes còn **lỗi mask trùng** được liệt kê ở mục 3, cần sửa trong CVAT và export lại nếu còn kịp.
+Ba tier và bốn checkpoint (cp3–cp6) đã export đúng format quy định (semantic: Segmentation mask 1.1; instance/panoptic: COCO 1.0) và đặt trong `submissions/` với đúng tên. Cả chín trạm đã có ZIP đúng format. hard_panoptic đã sửa lỗi mask trùng và export lại (xem mục 3); cp1_holes còn **lỗi mask trùng** được liệt kê ở mục 3, cần sửa trong CVAT và export lại nếu còn kịp.
 
 ## 2. Một quyết định trước khi dùng gợi ý
 
@@ -34,7 +34,7 @@ Ba tier và bốn checkpoint (cp3–cp6) đã export đúng format quy định (
 - Lỗi thuộc loại: **thừa vật (mask trùng)** — cùng một chiếc truck bị vẽ thành nhiều mask `truck` nằm đè nhau.
 - Bằng chứng tôi nhìn thấy: chạy tự kiểm decode RLE trên ZIP export thấy 3 mask `truck` (annotation id 34, 41, 42) có IoU cặp nhau 0.81–0.94 (chồng lấn 14.112–16.621 pixel); ngoài ra mask truck này còn đè lên mask `car` ~4 nghìn pixel và tràn nhẹ sang `road`/`vegetation`. Panoptic yêu cầu mỗi thing chỉ một mask và các mask không chồng lấn, nên đây là lỗi thật, không phải sai số biên.
 - Quy tắc và hành động sửa: theo quy tắc panoptic, xoá các mask `truck` dư trong CVAT, giữ đúng một mask cho chiếc xe đó, kiểm lại danh sách Objects rồi Save. Tôi **không sửa JSON bên trong ZIP bằng tay** vì repo cấm sửa export thủ công; phải sửa trong CVAT và export lại.
-- Sau sửa đã Save và export lại chưa? **Chưa** — lỗi được phát hiện ở bước tự kiểm sau khi export; cần quay lại CVAT sửa mask, Save và export `hard_panoptic.zip` lần nữa, rồi thay file trong `submissions/`. Cần coach hỗ trợ xác nhận cách xử lý phần truck tràn sang `road`/`vegetation` khi vẽ lại. Bản `hard_panoptic.zip` hiện trong `submissions/` vẫn là bản trước khi sửa, chỉ việc thay khi có export mới.
+- Sau sửa đã Save và export lại chưa? **Đã sửa.** Đã xoá các mask `truck` dư trong CVAT, Save và export lại `hard_panoptic.zip` (63 → 59 mask); tự kiểm decode RLE trên bản mới xác nhận các cặp truck trùng IoU 0.81–0.94 không còn, chỉ còn một cặp truck–car chồng vừa phải (IoU ~0.24) để coach đối chiếu reference quyết định. File `submissions/hard_panoptic.zip` trong fork là bản đã sửa.
 
 Về tự đánh giá: chưa chạy scorer / chưa có điểm tự đánh giá (ground truth chưa dùng để chấm; không đưa đáp án vào fork).
 
