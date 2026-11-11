@@ -13,13 +13,13 @@
 | hard_panoptic | hard_panoptic.zip | 2 / 2 | 30 |
 | cp1_holes | chưa có | 0 / 1 | 3 |
 | cp2_slice | chưa có | 0 / 1 | 3 |
-| cp5_occlusion | chưa có | 0 / 1 | 3 |
-| cp3_thin | chưa có | 0 / 1 | 3 |
-| cp4_curb | chưa có | 0 / 1 | 3 |
-| cp6_coverage | chưa có | 0 / 1 | 3 |
+| cp5_occlusion | cp5_occlusion.zip | 1 / 1 | 3 |
+| cp3_thin | cp3_thin.zip | 1 / 1 | 3 |
+| cp4_curb | cp4_curb.zip | 1 / 1 | 3 |
+| cp6_coverage | cp6_coverage.zip | 1 / 1 | 3 |
 | **Tổng tối đa** | | | **100** |
 
-Ba tier đã export đúng format quy định (Easy: Segmentation mask 1.1; Medium/Hard: COCO 1.0) và đặt trong `submissions/` với đúng tên. **Sáu checkpoint chưa kịp làm trong timebox 240 phút**, không tạo ZIP rỗng; phần còn thiếu này được ghi rõ thay vì bỏ trống.
+Ba tier và bốn checkpoint (cp3–cp6) đã export đúng format quy định (semantic: Segmentation mask 1.1; instance/panoptic: COCO 1.0) và đặt trong `submissions/` với đúng tên. **cp1_holes và cp2_slice chưa kịp làm**, không tạo ZIP rỗng; phần còn thiếu này được ghi rõ thay vì bỏ trống.
 
 ## 2. Một quyết định trước khi dùng gợi ý
 
@@ -34,7 +34,7 @@ Ba tier đã export đúng format quy định (Easy: Segmentation mask 1.1; Medi
 - Lỗi thuộc loại: **thừa vật (mask trùng)** — cùng một chiếc truck bị vẽ thành nhiều mask `truck` nằm đè nhau.
 - Bằng chứng tôi nhìn thấy: chạy tự kiểm decode RLE trên ZIP export thấy 3 mask `truck` (annotation id 34, 41, 42) có IoU cặp nhau 0.81–0.94 (chồng lấn 14.112–16.621 pixel); ngoài ra mask truck này còn đè lên mask `car` ~4 nghìn pixel và tràn nhẹ sang `road`/`vegetation`. Panoptic yêu cầu mỗi thing chỉ một mask và các mask không chồng lấn, nên đây là lỗi thật, không phải sai số biên.
 - Quy tắc và hành động sửa: theo quy tắc panoptic, xoá các mask `truck` dư trong CVAT, giữ đúng một mask cho chiếc xe đó, kiểm lại danh sách Objects rồi Save. Tôi **không sửa JSON bên trong ZIP bằng tay** vì repo cấm sửa export thủ công; phải sửa trong CVAT và export lại.
-- Sau sửa đã Save và export lại chưa? **Chưa** — lỗi được phát hiện ở bước tự kiểm sau khi export; cần quay lại CVAT sửa mask, Save và export `hard_panoptic.zip` lần nữa, rồi thay file trong `submissions/`. Cần coach hỗ trợ xác nhận cách xử lý phần truck tràn sang `road`/`vegetation` khi vẽ lại.
+- Sau sửa đã Save và export lại chưa? **Chưa** — lỗi được phát hiện ở bước tự kiểm sau khi export; cần quay lại CVAT sửa mask, Save và export `hard_panoptic.zip` lần nữa, rồi thay file trong `submissions/`. Cần coach hỗ trợ xác nhận cách xử lý phần truck tràn sang `road`/`vegetation` khi vẽ lại. Bản `hard_panoptic.zip` hiện trong `submissions/` vẫn là bản trước khi sửa, chỉ việc thay khi có export mới.
 
 Về tự đánh giá: chưa chạy scorer / chưa có điểm tự đánh giá (ground truth chưa dùng để chấm; không đưa đáp án vào fork).
 
